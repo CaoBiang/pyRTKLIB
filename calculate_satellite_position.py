@@ -2,8 +2,7 @@
 import math
 
 def calculate_satellite_position(brdcParameter):
-    
-    pi=3.14159265358979323846
+
     omegae = 7.2921151467e-5
     mu = 3.986005e14
     
@@ -79,6 +78,7 @@ def calculate_satellite_position(brdcParameter):
     zk = y1k * math.sin(ik)
 
     SatellitePosition=[xk,yk,zk]
+
     return SatellitePosition
 
 
