@@ -1,7 +1,9 @@
-import linecache  # 读取文件需要
-import math  # 计算需要
+# https://github.com/CaoBiang/pyRTKLIB
 
-def read_brdc():
+import linecache
+
+def read_brdc(brdc_name = 'brdc0010.20n',satellite_name = '5'):
+
     toe = []
     sqrta = []
     e = []
@@ -19,17 +21,13 @@ def read_brdc():
     Cic = []
     Cis = []
 
-    # 输入信息
-    satellite_name = '5'  # 需要计算的卫星编号
-    brdc_name = 'brdc0010.20n'  # 同目录下广播星历文件名
     # 头文件有多少行
     head_count = 8
     # 一共多少行
     all_count = len(open(brdc_name).readlines())
-    print(all_count)
+
     # 读取广播星历文件参数
     all_satellite_first_line = [i + head_count for i in list(range(1, all_count - 1, 8))]  # 每次观测第一行在广播星历中的行数
-    print(all_satellite_first_line)
 
     choosen_satellite_first_line = []  # 所需卫星每次观测在广播星历文件中的第一行
 
@@ -201,13 +199,10 @@ def read_brdc():
             sqra2 = float(read_line[72:75])
         sqrta.append(sqra1 * 10 ** sqra2)
 
-    # 精密星历与广播星历之间存在所给时间不完全相同的情况
-    # 故tk为精密星历历元减去广播星历历元
-    tk = []
     # 将广播星历的小时、分钟、秒数记录
-    time1h = []
-    time1m = []
-    time1s = []
+    satellite_time_h = []
+    satellite_time_m = []
+    satellite_time_s = []
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i).strip()
         if satellite_name >= 1 and satellite_name <= 10:
@@ -218,11 +213,11 @@ def read_brdc():
             h = read_line[12:14]
             m = read_line[15:17]
             s = read_line[18:22]
-        time1h.append(h.lstrip())
-        time1m.append(m.lstrip())
-        time1s.append(s.lstrip())
-    time1h = list(map(int, time1h))  # 字符串转浮点数以计算
-    time1m = list(map(int, time1m))
-    time1s = list(map(float, time1s))
+        satellite_time_h.append(h.lstrip())
+        satellite_time_m.append(m.lstrip())
+        satellite_time_s.append(s.lstrip())
+    satellite_time_h = list(map(int, satellite_time_h))  # 字符串转浮点数以计算
+    satellite_time_m = list(map(int, satellite_time_m))
+    satellite_time_s = list(map(float, satellite_time_s))
 
-RB()
+read_brdc()
