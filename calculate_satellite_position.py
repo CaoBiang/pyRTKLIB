@@ -1,6 +1,7 @@
 # https://github.com/CaoBiang/pyRTKLIB
+import math
 
-def CSP(brdcParameter):
+def calculate_satellite_position(brdcParameter):
     
     pi=3.14159265358979323846
     omegae = 7.2921151467e-5
@@ -26,23 +27,23 @@ def CSP(brdcParameter):
     tk = brdcParameter[16]
 
     # 计算卫星位置
-    A = sqrta[i] ** 2  # 卫星轨道半长轴
+    A = sqrta ** 2  # 卫星轨道半长轴
     n_0 = math.sqrt(mu / A ** 3)  # 卫星平均角速度
-    n = n_0 + deltan[i]  # 校正后的卫星平均角速度
+    n = n_0 + deltan  # 校正后的卫星平均角速度
     # 平近点角（迭代法）
-    Mk = m0[i] + n * tk
+    Mk = m0 + n * tk
     if Mk < 0:
         Mk += 2 * math.pi
     if Mk > 2 * math.pi:
         Mk -= 2 * math.pi
     # 偏近点角
     Eold = Mk
-    Enew = Mk + e[i] * math.sin(Eold)
+    Enew = Mk + e * math.sin(Eold)
     j = 1
 
     while abs(Enew - Eold) > 1e-8:
         Eold = Enew
-        Enew = Mk + e[i] * math.sin(Eold)
+        Enew = Mk + e * math.sin(Eold)
         j += 1
         if (j > 10):
             break
@@ -50,7 +51,7 @@ def CSP(brdcParameter):
     Ek = Enew
 
     # 真近点角
-    cosNuk = (math.cos(Ek) - e) / (1 - e[i] * math.cos(Ek))
+    cosNuk = (math.cos(Ek) - e) / (1 - e * math.cos(Ek))
     sinNuk = (math.sqrt(1 - e ** 2) * math.sin(Ek)) / (1 - e * math.cos(Ek))
 
     Nk = math.atan(sinNuk / cosNuk)
@@ -66,12 +67,12 @@ def CSP(brdcParameter):
     #摄动改正后升交点角距、卫星矢径长度、轨道倾角
     uk = Pk + deltauk
     rk = A * (1 - e * math.cos(Ek)) + deltark
-    ik = i0 + idot[i] * tk + deltaik
+    ik = i0 + idot * tk + deltaik
     #极坐标转化为直角坐标
     x1k = rk * math.cos(uk)
     y1k = rk * math.sin(uk)
     #升交点赤经
-    omegak = omega0 + (omegadot[i] - omegae) * tk - omegae * toe
+    omegak = omega0 + (omegadot - omegae) * tk - omegae * toe
     #最终WGS84坐标
     xk = x1k * math.cos(omegak) - y1k * math.cos(ik) * math.sin(omegak)
     yk = x1k * math.sin(omegak) + y1k * math.cos(ik) * math.cos(omegak)
@@ -79,6 +80,5 @@ def CSP(brdcParameter):
 
     SatellitePosition=[xk,yk,zk]
     return SatellitePosition
-    
 
 
