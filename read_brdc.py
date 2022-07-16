@@ -1,5 +1,9 @@
 # https://github.com/CaoBiang/pyRTKLIB
 
+#计算函数需要输入的是一个列表，而不是一堆列表，所以需要选出特定时间所需要的参数
+#头文件的行数不能自己确定
+#需要返回tk，所以需要输入当前的时间
+
 import linecache
 
 def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
@@ -31,12 +35,11 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
 
     choosen_satellite_first_line = []  # 所需卫星每次观测在广播星历文件中的第一行
 
-    for i in all_satellite_first_line:  #
+    for i in all_satellite_first_line:  # 获得所选卫星的第一行行数
         read_line = linecache.getline(brdc_name, i).strip()  # 读取所有卫星每次观测的第一行
         satellite_number = read_line[0:2].replace(' ', '')  # 截取开头的两个字符，为卫星编号
         if satellite_number == satellite_name:  # 如果卫编号刚好符合我们需要求的卫星编号，便把这一行数记录下来
             choosen_satellite_first_line.append(i)
-    print(choosen_satellite_first_line)
 
     # 根据广播星历参数的排列顺序分别读取各个参数并加入列表
     for i in choosen_satellite_first_line:
@@ -60,6 +63,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             e1 = float(read_line[18:33])
             e2 = float(read_line[34:37])
         e.append(e1 * 10 ** e2)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 4).strip()
         mole = float(read_line[0:5])
@@ -70,6 +74,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             i01 = float(read_line[0:14])
             i02 = float(read_line[15:18])
         i0.append(i01 * 10 ** i02)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 4).strip()
         mole = float(read_line[0:5])
@@ -80,6 +85,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             omega1 = float(read_line[37:52])
             omega2 = float(read_line[53:56])
         omega.append(omega1 * 10 ** omega2)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 3).strip()
         mole = float(read_line[0:5])
@@ -90,6 +96,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             omega01 = float(read_line[37:52])
             omega02 = float(read_line[53:56])
         omega0.append(omega01 * 10 ** omega02)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 1).strip()
         mole = float(read_line[0:5])
@@ -100,6 +107,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             mu01 = float(read_line[56:71])
             mu02 = float(read_line[72:75])
         m0.append(mu01 * 10 ** mu02)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 1).strip()
         mole = float(read_line[0:5])
@@ -110,6 +118,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             delten1 = float(read_line[37:52])
             delten2 = float(read_line[53:56])
         deltan.append(delten1 * 10 ** delten2)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 4).strip()
         mole = float(read_line[0:5])
@@ -120,6 +129,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             omegadot1 = float(read_line[56:71])
             omegadot2 = float(read_line[72:75])
         omegadot.append(omegadot1 * 10 ** omegadot2)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 5).strip()
         mole = float(read_line[0:5])
@@ -130,6 +140,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             idot1 = float(read_line[0:14])
             idot2 = float(read_line[15:18])
         idot.append(idot1 * 10 ** idot2)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 2).strip()
         mole = float(read_line[0:5])
@@ -140,6 +151,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             cus1 = float(read_line[37:52])
             cus2 = float(read_line[53:56])
         Cus.append(cus1 * 10 ** cus2)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 2).strip()
         mole = float(read_line[0:5])
@@ -150,6 +162,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             cuc1 = float(read_line[0:14])
             cuc2 = float(read_line[15:18])
         Cuc.append(cuc1 * 10 ** cuc2)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 3).strip()
         mole = float(read_line[0:5])
@@ -160,6 +173,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             cis1 = float(read_line[56:71])
             cis2 = float(read_line[72:75])
         Cis.append(cis1 * 10 ** cis2)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 3).strip()
         mole = float(read_line[0:5])
@@ -170,6 +184,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             cic1 = float(read_line[18:33])
             cic2 = float(read_line[34:37])
         Cic.append(cic1 * 10 ** cic2)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 1).strip()
         mole = float(read_line[0:5])
@@ -180,6 +195,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             crs1 = float(read_line[18:33])
             crs2 = float(read_line[34:37])
         Crs.append(crs1 * 10 ** crs2)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 4).strip()
         mole = float(read_line[0:5])
@@ -190,6 +206,7 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
             crc1 = float(read_line[18:33])
             crc2 = float(read_line[34:37])
         Crc.append(crc1 * 10 ** crc2)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 2).strip()
         mole = float(read_line[0:5])
@@ -219,4 +236,4 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
         satellite_time_s = list(map(float, satellite_time_s))
 
 
-read_brdc()
+
