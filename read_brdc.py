@@ -2,8 +2,8 @@
 
 import linecache
 
+def read_brdc(brdc_name='brdc0010.20n', satellite_name='5',head_count = 8):
 
-def read_brdc(brdc_name='brdc0010.20n', satellite_name='5'):
     satellite_time_h = []
     satellite_time_m = []
     satellite_time_s = []
@@ -24,8 +24,6 @@ def read_brdc(brdc_name='brdc0010.20n', satellite_name='5'):
     Cic = []
     Cis = []
 
-    # 头文件有多少行
-    head_count = 8
     # 一共多少行
     all_count = len(open(brdc_name).readlines())
     # 读取广播星历文件参数
