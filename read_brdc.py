@@ -2,8 +2,11 @@
 
 import linecache
 
-def read_brdc(brdc_name = 'brdc0010.20n',satellite_name = '5'):
 
+def read_brdc(brdc_name='brdc0010.20n', satellite_name='5'):
+    satellite_time_h = []
+    satellite_time_m = []
+    satellite_time_s = []
     toe = []
     sqrta = []
     e = []
@@ -25,7 +28,6 @@ def read_brdc(brdc_name = 'brdc0010.20n',satellite_name = '5'):
     head_count = 8
     # 一共多少行
     all_count = len(open(brdc_name).readlines())
-
     # 读取广播星历文件参数
     all_satellite_first_line = [i + head_count for i in list(range(1, all_count - 1, 8))]  # 每次观测第一行在广播星历中的行数
 
@@ -33,9 +35,10 @@ def read_brdc(brdc_name = 'brdc0010.20n',satellite_name = '5'):
 
     for i in all_satellite_first_line:  #
         read_line = linecache.getline(brdc_name, i).strip()  # 读取所有卫星每次观测的第一行
-        satellite_number = read_line[0:2]  # 截取开头的两个字符，为卫星编号
+        satellite_number = read_line[0:2].replace(' ', '')  # 截取开头的两个字符，为卫星编号
         if satellite_number == satellite_name:  # 如果卫编号刚好符合我们需要求的卫星编号，便把这一行数记录下来
             choosen_satellite_first_line.append(i)
+    print(choosen_satellite_first_line)
 
     # 根据广播星历参数的排列顺序分别读取各个参数并加入列表
     for i in choosen_satellite_first_line:
@@ -48,6 +51,7 @@ def read_brdc(brdc_name = 'brdc0010.20n',satellite_name = '5'):
             toe1 = float(read_line[0:14])
             toe2 = float(read_line[15:18])
         toe.append(toe1 * 10 ** toe2)
+
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i + 2).strip()
         mole = float(read_line[0:5])
@@ -199,13 +203,9 @@ def read_brdc(brdc_name = 'brdc0010.20n',satellite_name = '5'):
             sqra2 = float(read_line[72:75])
         sqrta.append(sqra1 * 10 ** sqra2)
 
-    # 将广播星历的小时、分钟、秒数记录
-    satellite_time_h = []
-    satellite_time_m = []
-    satellite_time_s = []
     for i in choosen_satellite_first_line:
         read_line = linecache.getline(brdc_name, i).strip()
-        if satellite_name >= 1 and satellite_name <= 10:
+        if len(satellite_name) == 1:
             h = read_line[11:13]
             m = read_line[14:16]
             s = read_line[17:21]
@@ -216,8 +216,9 @@ def read_brdc(brdc_name = 'brdc0010.20n',satellite_name = '5'):
         satellite_time_h.append(h.lstrip())
         satellite_time_m.append(m.lstrip())
         satellite_time_s.append(s.lstrip())
-    satellite_time_h = list(map(int, satellite_time_h))  # 字符串转浮点数以计算
-    satellite_time_m = list(map(int, satellite_time_m))
-    satellite_time_s = list(map(float, satellite_time_s))
+        satellite_time_h = list(map(int, satellite_time_h))  # 字符串转浮点数
+        satellite_time_m = list(map(int, satellite_time_m))
+        satellite_time_s = list(map(float, satellite_time_s))
+
 
 read_brdc()
